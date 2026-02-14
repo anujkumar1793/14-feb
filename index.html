@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Be My Valentine? ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    background:linear-gradient(-45deg,#ff4e7a,#ff758c,#ff7eb3,#ff99ac);
+    background-size:400% 400%;
+    animation:gradient 12s ease infinite;
+}
+
+@keyframes gradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.card{
+    width:90%;
+    max-width:420px;
+    padding:40px;
+    border-radius:25px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(25px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    text-align:center;
+    color:white;
+}
+
+h1{
+    font-size:22px;
+    margin-bottom:30px;
+}
+
+.button-area{
+    position:relative;
+    height:150px;
+}
+
+button{
+    padding:12px 28px;
+    border-radius:30px;
+    border:none;
+    cursor:pointer;
+    position:absolute;
+    transition:0.3s;
+    font-weight:600;
+    font-size:16px;
+}
+
+#yesBtn{
+    background:#ff2e63;
+    color:white;
+    left:20%;
+    top:50px;
+}
+
+#yesBtn:hover{
+    transform:scale(1.1);
+}
+
+#noBtn{
+    background:#333;
+    color:white;
+    left:60%;
+    top:50px;
+}
+
+.love{
+    display:none;
+    margin-top:20px;
+    font-size:22px;
+    font-weight:600;
+}
+
+.gif{
+    display:none;
+    margin-top:15px;
+}
+
+.gif img{
+    width:100%;
+    border-radius:15px;
+}
+
+.heart{
+    position:absolute;
+    font-size:22px;
+    animation:float 6s linear infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(0);opacity:1;}
+    100%{transform:translateY(-900px);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- YOUR LOCAL MUSIC FILE -->
+<audio id="music" src="love.mp3" loop></audio>
+
+<div class="card">
+    <h1>Will You Be My Valentine? 💕</h1>
+
+    <div class="button-area" id="area">
+        <button id="yesBtn">Yes ❤️</button>
+        <button id="noBtn">No 😢</button>
+    </div>
+
+    <div class="love" id="love">I Love You So Much 💖🥰</div>
+    <div class="gif" id="gif">
+        <img src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif">
+    </div>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const love = document.getElementById("love");
+const gif = document.getElementById("gif");
+const area = document.getElementById("area");
+const music = document.getElementById("music");
+
+/* Autoplay after first user interaction (Required for browsers) */
+document.body.addEventListener("click", () => {
+    music.volume = 0;
+    music.play();
+
+    let fade = setInterval(() => {
+        if (music.volume < 0.6) {
+            music.volume += 0.02;
+        } else {
+            clearInterval(fade);
+        }
+    }, 150);
+
+}, { once: true });
+
+/* Runaway No Button */
+function moveNo() {
+    let w = area.clientWidth - noBtn.clientWidth;
+    let h = area.clientHeight - noBtn.clientHeight;
+
+    noBtn.style.left = Math.random() * w + "px";
+    noBtn.style.top = Math.random() * h + "px";
+}
+
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+/* Yes Click */
+yesBtn.addEventListener("click", () => {
+    love.style.display = "block";
+    gif.style.display = "block";
+
+    setInterval(() => {
+        let heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6000);
+    }, 300);
+});
+</script>
+
+</body>
+</html>
