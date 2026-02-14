@@ -20,79 +20,82 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
+    background:linear-gradient(135deg,#ff4e7a,#ff758c,#ff99ac);
     overflow:hidden;
-    background:linear-gradient(-45deg,#ff4e7a,#ff758c,#ff7eb3,#ff99ac);
-    background-size:400% 400%;
-    animation:gradient 12s ease infinite;
 }
 
-@keyframes gradient{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
-
+/* Card */
 .card{
     width:90%;
     max-width:420px;
-    padding:40px;
+    padding:35px 25px;
     border-radius:25px;
     background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(25px);
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+    backdrop-filter:blur(20px);
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
     text-align:center;
     color:white;
 }
 
+/* Heading */
 h1{
-    font-size:22px;
+    font-size:clamp(20px,4vw,26px);
     margin-bottom:30px;
 }
 
+/* Button Area */
 .button-area{
     position:relative;
-    height:150px;
+    height:160px;
 }
 
+/* Buttons */
 button{
-    padding:12px 28px;
-    border-radius:30px;
+    padding:14px 32px;
+    border-radius:40px;
     border:none;
     cursor:pointer;
     position:absolute;
-    transition:0.3s;
     font-weight:600;
     font-size:16px;
+    transition:0.3s;
 }
 
+/* Yes Button */
 #yesBtn{
     background:#ff2e63;
     color:white;
     left:20%;
-    top:50px;
+    top:60px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
 #yesBtn:hover{
     transform:scale(1.1);
 }
 
+/* No Button */
 #noBtn{
     background:#333;
     color:white;
     left:60%;
-    top:50px;
+    top:60px;
 }
 
+/* Love Text */
 .love{
     display:none;
     margin-top:20px;
     font-size:22px;
     font-weight:600;
+    animation:fadeIn 1s ease forwards;
 }
 
+/* GIF */
 .gif{
     display:none;
     margin-top:15px;
+    animation:fadeIn 1.5s ease forwards;
 }
 
 .gif img{
@@ -100,6 +103,7 @@ button{
     border-radius:15px;
 }
 
+/* Floating Hearts */
 .heart{
     position:absolute;
     font-size:22px;
@@ -110,12 +114,31 @@ button{
     0%{transform:translateY(0);opacity:1;}
     100%{transform:translateY(-900px);opacity:0;}
 }
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+/* Mobile Optimization */
+@media (max-width:500px){
+    .card{
+        padding:30px 20px;
+    }
+
+    button{
+        font-size:15px;
+        padding:12px 24px;
+    }
+
+    #yesBtn{left:15%;}
+    #noBtn{left:55%;}
+}
 </style>
 </head>
 
 <body>
 
-<!-- YOUR LOCAL MUSIC FILE -->
 <audio id="music" src="love.mp3" loop></audio>
 
 <div class="card">
@@ -140,47 +163,42 @@ const gif = document.getElementById("gif");
 const area = document.getElementById("area");
 const music = document.getElementById("music");
 
-/* Autoplay after first user interaction (Required for browsers) */
-document.body.addEventListener("click", () => {
+/* Runaway No Button */
+function moveNo(){
+    let w = area.clientWidth - noBtn.clientWidth;
+    let h = area.clientHeight - noBtn.clientHeight;
+    noBtn.style.left = Math.random()*w + "px";
+    noBtn.style.top = Math.random()*h + "px";
+}
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+/* YES CLICK */
+yesBtn.addEventListener("click", () => {
+
+    // Start music ONLY here
     music.volume = 0;
     music.play();
 
     let fade = setInterval(() => {
-        if (music.volume < 0.6) {
-            music.volume += 0.02;
+        if(music.volume < 0.7){
+            music.volume += 0.03;
         } else {
             clearInterval(fade);
         }
-    }, 150);
+    },150);
 
-}, { once: true });
+    love.style.display="block";
+    gif.style.display="block";
 
-/* Runaway No Button */
-function moveNo() {
-    let w = area.clientWidth - noBtn.clientWidth;
-    let h = area.clientHeight - noBtn.clientHeight;
-
-    noBtn.style.left = Math.random() * w + "px";
-    noBtn.style.top = Math.random() * h + "px";
-}
-
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
-
-/* Yes Click */
-yesBtn.addEventListener("click", () => {
-    love.style.display = "block";
-    gif.style.display = "block";
-
-    setInterval(() => {
-        let heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = "❤️";
-        heart.style.left = Math.random() * window.innerWidth + "px";
+    setInterval(()=>{
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="❤️";
+        heart.style.left=Math.random()*window.innerWidth+"px";
         document.body.appendChild(heart);
-
-        setTimeout(() => heart.remove(), 6000);
-    }, 300);
+        setTimeout(()=>heart.remove(),6000);
+    },300);
 });
 </script>
 
